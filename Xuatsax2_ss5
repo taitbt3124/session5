@@ -1,0 +1,79 @@
+create table departments(
+    dept_id serial primary key ,
+    dept_name varchar(100)
+);
+
+create table employees(
+    emp_id serial primary key ,
+    emp_name varchar(100),
+    dep_id int references departments(dept_id),
+    salary numeric(10,2),
+    hire_date date
+);
+
+create table projects(
+    project_id serial primary key ,
+    project_name varchar(100),
+    dept_id int references departments(dept_id)
+);
+
+INSERT INTO departments (dept_name) VALUES
+    ('Phòng Kỹ thuật'),
+    ('Phòng Nhân sự'),
+    ('Phòng Marketing'),
+    ('Phòng Kế toán');
+
+INSERT INTO employees (emp_name, dep_id, salary, hire_date) VALUES
+    ('Nguyễn Văn An', 1, 1500.00, '2023-01-15'),
+    ('Trần Thị Bình', 1, 1800.50, '2022-05-20'),
+    ('Lê Hoàng Chinh', 2, 1200.00, '2023-03-10'),
+    ('Phạm Minh Đức', 3, 1350.00, '2024-02-01'),
+    ('Hoàng Lan Hương', 4, 1100.00, '2021-11-12'),
+    ('Đặng Văn Khánh', 1, 2000.00, '2020-08-25'),
+    ('Bùi Thị Liên', 2, 1250.00, '2023-06-30'),
+    ('Vũ Thế Nam', 3, 1400.00, '2022-09-14'),
+    ('Ngô Kim Oanh', 4, 1150.00, '2023-12-05'),
+    ('Phan Đình Phúc', 1, 1700.00, '2024-01-10');
+
+INSERT INTO projects (project_name, dept_id) VALUES
+     ('Nâng cấp hệ thống ERP', 1),
+     ('Tuyển dụng nhân sự 2026', 2),
+     ('Chiến dịch Branding hè', 3),
+     ('Quyết toán thuế quý 1', 4),
+     ('Phát triển Mobile App', 1),
+     ('Đào tạo kỹ năng mềm', 2),
+     ('Social Media Marketing', 3),
+     ('Kiểm toán nội bộ', 4),
+     ('Bảo trì Server', 1),
+     ('Ra mắt sản phẩm mới', 3);
+
+select e.emp_name , d.dept_name, e.salary
+    from employees e
+inner join departments d on d.dept_id = e.dep_id;
+
+select sum(e.salary) "Tổng lương", avg(e.salary) "Lương TB", min(e.salary) "Lương MIN", max(e.salary) "Lương MAX", count(e.salary)
+from employees e;
+
+select e.dep_id , avg(e.salary) a
+from employees e
+group by e.dep_id
+having avg(e.salary) >1300;
+
+
+select p.project_name, d.dept_name, e.emp_name
+from projects p join departments d on p.dept_id = d.dept_id
+                join employees e on p.dept_id = e.dep_id;
+
+select emp_name ,salary, dep_id
+from employees
+where (dep_id, salary) in (select dep_id, max(salary)
+                 from employees
+                 group by dep_id);
+
+
+
+
+
+
+
+
